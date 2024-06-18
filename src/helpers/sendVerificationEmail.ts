@@ -24,7 +24,7 @@ export async function sendVerificationEmail(
     await transporter.sendMail({
       from: {
         name: 'Anonymous message',
-        address: 'noreply@anonymous-message.com',
+        address: 'intercupapp@gmail.com',
       },
       to: email,
       subject: 'Verification code - Anonymous message',

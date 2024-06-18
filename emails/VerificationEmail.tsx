@@ -1,4 +1,13 @@
-import { Container, Font, Head, Hr, Html, Text } from '@react-email/components';
+import {
+  Container,
+  Font,
+  Head,
+  Hr,
+  Html,
+  Row,
+  Section,
+  Text,
+} from '@react-email/components';
 
 interface VerificationEmailProps {
   username: string;
@@ -22,10 +31,16 @@ export default function Email({ username, otp }: VerificationEmailProps) {
         />
       </Head>
       <Container>
-        <Text>Hi {username},</Text>
-        <Hr />
-        <Text>You OTP is: {otp}</Text>
-        <Hr />
+        <Section>
+          <Row>
+            <Text>Hi {username},</Text>
+            <Hr />
+            <Text>You OTP is: {otp}</Text>
+            <Hr />
+            <Text>Regards,</Text>
+            <Text>Anonymous message team</Text>
+          </Row>
+        </Section>
       </Container>
     </Html>
   );
