@@ -38,6 +38,9 @@ export async function GET(request: Request) {
       messages: user[0]?.messages,
     });
   } catch (error) {
-    console.error('Error in finding user: ', error);
+    return Response.json({
+      success: false,
+      message: 'Not Authenticated',
+    });
   }
 }

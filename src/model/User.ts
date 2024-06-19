@@ -2,12 +2,12 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface Message extends Document {
   content: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 const MessageSchema: Schema<Message> = new Schema({
   content: { type: String, required: true },
-  createdAt: { type: String, required: true },
+  createdAt: { type: Date, required: true },
 });
 
 export interface User extends Document {
