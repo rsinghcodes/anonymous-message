@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toaster';
 import AuthProvider from '@/context/AuthProvider';
 import type { Metadata } from 'next';
 import { Sora } from 'next/font/google';
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className={sora.className}>{children}</body>
+        <body className={sora.className}>
+          {children}
+          <Toaster />
+        </body>
       </AuthProvider>
     </html>
   );
