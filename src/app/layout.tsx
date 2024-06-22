@@ -1,3 +1,4 @@
+import Navbar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/toaster';
 import AuthProvider from '@/context/AuthProvider';
 import type { Metadata } from 'next';
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <AuthProvider>
         <body className={sora.className}>
+          <Navbar />
           {children}
           <Toaster />
         </body>
