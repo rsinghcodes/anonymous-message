@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/carousel';
 import messages from '@/messages.json';
 import Autoplay from 'embla-carousel-autoplay';
+
 export default function Home() {
   return (
     <>
