@@ -57,9 +57,11 @@ export default function Page() {
       setIsLoading(true);
       setIsSwitchLoading(true);
       try {
-        const response = await axios.get<ApiResponse>('/api/get-messages');
-        setMessages(response.data.messages || []);
         if (refresh) {
+          const response = await axios.get<ApiResponse>('/api/get-messages');
+          console.log('🚀 ~ response:', response);
+          setMessages(response.data.messages || []);
+
           toast({
             title: 'Refreshed Messages',
             description: 'Showing latest messages',
