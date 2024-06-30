@@ -1,5 +1,5 @@
 'use client';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardDescription } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/carousel';
 import messages from '@/messages.json';
 import Autoplay from 'embla-carousel-autoplay';
+import { MessageSquareMore } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -23,22 +24,25 @@ export default function Home() {
           </p>
         </section>
         <Carousel
-          className="w-full max-w-xs"
+          className="w-full max-w-md"
           plugins={[Autoplay({ delay: 2000 })]}
         >
           <CarouselContent>
             {messages.map((message, index) => (
               <CarouselItem key={index}>
-                <div className="p-1">
-                  <Card>
-                    <CardHeader>{message.title}</CardHeader>
-                    <CardContent className="flex aspect-square items-center justify-center p-6">
+                <Card>
+                  <CardContent className="flex items-start justify-center p-5">
+                    <MessageSquareMore className="mr-2 mt-1" />
+                    <div>
                       <span className="text-lg font-semibold">
                         {message.content}
                       </span>
-                    </CardContent>
-                  </Card>
-                </div>
+                      <CardDescription className="mt-4">
+                        {message.createdAt}
+                      </CardDescription>
+                    </div>
+                  </CardContent>
+                </Card>
               </CarouselItem>
             ))}
           </CarouselContent>
