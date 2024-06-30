@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import AuthProvider from '@/context/AuthProvider';
 import type { Metadata } from 'next';
@@ -21,9 +22,16 @@ export default function RootLayout({
     <html lang="en">
       <AuthProvider>
         <body className={sora.className}>
-          <Navbar />
-          {children}
-          <Toaster />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+            <Toaster />
+          </ThemeProvider>
         </body>
       </AuthProvider>
     </html>

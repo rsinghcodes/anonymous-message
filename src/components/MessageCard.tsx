@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -20,6 +21,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Message } from '@/model/User';
 import axios from 'axios';
 import { X } from 'lucide-react';
+import moment from 'moment';
 
 type MessageCardProps = {
   message: Message;
@@ -40,7 +42,7 @@ export default function MessageCard({
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
+          <CardTitle>Message</CardTitle>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive">
@@ -63,9 +65,13 @@ export default function MessageCard({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-
-          <CardDescription>Card Description</CardDescription>
         </CardHeader>
+        <CardContent>
+          <CardTitle>{message.content}</CardTitle>
+          <CardDescription>
+            {moment(message.createdAt).fromNow()}
+          </CardDescription>
+        </CardContent>
       </Card>
     </div>
   );
