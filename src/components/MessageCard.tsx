@@ -36,7 +36,7 @@ export default function MessageCard({
     <Card className="w-full max-w-md">
       <CardContent className="flex items-start justify-between p-5">
         <div className="flex justify-center items-start">
-          <MessageSquareMore className="mr-2 mt-1" />
+          <MessageSquareMore size={36} className="mr-2 mt-1" />
           <div>
             <span className="text-lg font-semibold">{message.content}</span>
             <CardDescription className="mt-2">

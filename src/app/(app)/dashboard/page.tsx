@@ -135,7 +135,7 @@ export default function Page() {
           <Button onClick={copyToClipboard}>Copy</Button>
         </div>
       </div>
-      <div className="mb-4">
+      <div className="flex items-center justify-start mb-4">
         <Switch
           {...register('acceptMessages')}
           checked={acceptMessages}
@@ -146,21 +146,28 @@ export default function Page() {
           Accept Messages: {acceptMessages ? 'On' : 'Off'}
         </span>
       </div>
-      <Separator />
-      <Button
-        className="mt-4"
-        variant="outline"
-        onClick={(e) => {
-          e.preventDefault();
-          fetchMessages(true);
-        }}
-      >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <RefreshCcw className="h-4 w-4" />
-        )}
-      </Button>
+      <Separator className="my-4" />
+      <div className="flex items-center justify-start">
+        <Button
+          variant="outline"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchMessages(true);
+          }}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCcw className="h-4 w-4" />
+          )}
+        </Button>
+        <span className="ml-2">
+          Total messages:{' '}
+          {messages.length && messages?.length < 10
+            ? `0${messages.length}`
+            : messages.length}
+        </span>
+      </div>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2">
         {messages.length > 0 ? (
           messages?.map((message: Message, index: number) => (
