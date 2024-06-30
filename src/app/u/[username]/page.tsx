@@ -34,6 +34,7 @@ export default function Page() {
         username: params.username,
       });
       toast({ title: response.data.message });
+      form.reset();
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -46,32 +47,35 @@ export default function Page() {
   };
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 rounded w-full max-w-6xl">
-      <div className="w-full max-w-lg p-4 space-y-8 rounded-lg shadow-md">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="grid w-full gap-2"
-          >
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Type your message here..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Send message</Button>
-          </form>
-        </Form>
-      </div>
-    </div>
+    <main className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 rounded w-full max-w-6xl grid place-items-center">
+      <section className="text-center mb-8 md:mb-12">
+        <p className="mt-3 md:mt-4 text-base md:text-lg">
+          Send message anonymously - Where you identity remains secret
+        </p>
+      </section>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid w-full max-w-3xl gap-2"
+        >
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    placeholder="Type your message here..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Send message</Button>
+        </form>
+      </Form>
+    </main>
   );
 }

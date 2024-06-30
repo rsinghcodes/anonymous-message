@@ -38,7 +38,7 @@ export default function Email({ username, otp }: VerificationEmailProps) {
             <Text>You OTP is: {otp}</Text>
             <Hr />
             <Text>Regards,</Text>
-            <Text>Anonymous message team</Text>
+            <Text>Anonymous Team</Text>
           </Row>
         </Section>
       </Container>

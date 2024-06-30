@@ -30,7 +30,7 @@ export default function MessageCard({
   const handleDeleteConfirm = async () => {
     const response = await axios.delete(`/api/delete-message/${message._id}`);
     toast({ title: response?.data.message });
-    onMessageDelete(message._id);
+    onMessageDelete(message._id as string);
   };
   return (
     <Card className="w-full max-w-md">
