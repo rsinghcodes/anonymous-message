@@ -8,6 +8,20 @@ Send and receive message anonymously 📲
 - Tailwind CSS
 - Shadcn UI
 
+### Screenshots
+*Home page*
+
+![Homepage](https://github.com/rsinghcodes/anonymous-message/assets/67682451/1b41ada8-0fbb-4f2d-adeb-11c2f945b112)
+
+*Sign in*
+
+![Sign in page](https://github.com/rsinghcodes/anonymous-message/assets/67682451/13b86a32-ff26-4ffe-99a2-6871d49b727a)
+
+*Dashboard*
+
+![Dashboard](https://github.com/rsinghcodes/anonymous-message/assets/67682451/005fef40-53bd-498f-9588-63ec43608231)
+
+
 ### Getting Started -
 
 Create and add below variables in `.env`
