@@ -107,6 +107,14 @@ export default function Page() {
     }
   };
 
+  if (!session || !session.user) {
+    return (
+      <div className="grid place-items-center h-[80vh]">
+        <p>Please wait, Loading dashboard...</p>
+      </div>
+    );
+  }
+
   const { username } = session?.user as User;
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`;
@@ -118,10 +126,6 @@ export default function Page() {
       description: 'Profile URL has been copied to clipboard',
     });
   };
-
-  if (!session || !session.user) {
-    return <div>Please login</div>;
-  }
 
   return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 rounded w-full max-w-6xl">
