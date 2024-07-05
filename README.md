@@ -1,6 +1,8 @@
 ## Anonymous message 💌
 Send and receive message anonymously 📲
 
+Visit - [_**Site is live**_](https://pinganonymous.netlify.app/) ✨
+
 ### Tech Stack -
 - Next.js
 - MongoDb
