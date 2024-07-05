@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const isPublicPath =
     url === '/sign-in' ||
     url === '/sign-up' ||
-    url === '/verify' ||
+    url.startsWith('/verify') ||
     url === '/';
 
   if (token && isPublicPath) {

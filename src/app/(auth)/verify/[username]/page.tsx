@@ -5,10 +5,13 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 import { useToast } from '@/components/ui/use-toast';
 import { verifySchema } from '@/schemas/verifySchema';
 import { ApiResponse } from '@/types/ApiResponse';
@@ -32,8 +35,17 @@ export default function Page() {
         username: params.username,
         code: data.code,
       });
-      toast({ title: 'Success', description: response.data.message });
-      router.replace('/sign-in');
+
+      if (response?.data?.success) {
+        toast({ title: 'Success', description: response.data.message });
+        router.replace('/sign-in');
+      } else {
+        toast({
+          title: 'Failed',
+          description: response.data.message,
+          variant: 'destructive',
+        });
+      }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -50,18 +62,33 @@ export default function Page() {
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Verify your account
           </h1>
-          <p className="mb-4">Enter the verification code sent to your email</p>
+          <p>Enter the verification code sent to your email</p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 text-center"
+          >
             <FormField
               control={form.control}
               name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Verification Code</FormLabel>
                   <FormControl>
-                    <Input placeholder="code" {...field} />
+                    <InputOTP
+                      containerClassName="justify-center"
+                      maxLength={6}
+                      {...field}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

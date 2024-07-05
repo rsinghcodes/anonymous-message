@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { useToast } from '@/components/ui/use-toast';
 import { signUpSchema } from '@/schemas/signUpSchema';
 import { ApiResponse } from '@/types/ApiResponse';
@@ -142,7 +143,7 @@ export default function Page() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" {...field} />
+                    <PasswordInput placeholder="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
