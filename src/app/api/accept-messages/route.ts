@@ -1,10 +1,10 @@
-import dbConnect from '@/lib/dbConnect';
-import UserModel from '@/model/User';
+import { PrismaClient } from '@prisma/client';
 import { User, getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/options';
 
+const prisma = new PrismaClient();
+
 export async function POST(request: Request) {
-  await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
 
@@ -15,14 +15,13 @@ export async function POST(request: Request) {
     });
   }
 
-  const userId = user._id;
   const { acceptMessages } = await request.json();
   try {
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      userId,
-      { isAcceptingMessage: acceptMessages },
-      { new: true }
-    );
+    const updatedUser = await prisma.user.update({
+      where: { id: user?.id },
+      data: { isAcceptingMessage: acceptMessages },
+    });
+
     if (!updatedUser) {
       return Response.json({
         sucess: false,
@@ -43,8 +42,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
-  await dbConnect();
+export async function GET(_: Request) {
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
 
@@ -55,9 +53,8 @@ export async function GET(request: Request) {
     });
   }
 
-  const userId = user._id;
   try {
-    const foundUser = await UserModel.findById(userId);
+    const foundUser = await prisma.user.findUnique({ where: { id: user?.id } });
     if (!foundUser) {
       return Response.json({
         sucess: false,
@@ -66,7 +63,7 @@ export async function GET(request: Request) {
     }
     return Response.json({
       sucess: true,
-      isAcceptingMessage: foundUser.isAcceptingMessage,
+      isAcceptingMessage: foundUser?.isAcceptingMessage,
     });
   } catch (error) {
     return Response.json({

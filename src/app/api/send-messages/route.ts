@@ -1,12 +1,11 @@
-import dbConnect from '@/lib/dbConnect';
-import UserModel, { Message } from '@/model/User';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
-  dbConnect();
   const { username, content } = await request.json();
   try {
-    const user = await UserModel.findOne({ username });
-
+    const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
       return Response.json({
         success: false,
@@ -21,9 +20,9 @@ export async function POST(request: Request) {
       });
     }
 
-    const newMessage = { content, createdAt: new Date() };
-    user.messages.push(newMessage as Message);
-    await user.save();
+    await prisma.message.create({
+      data: { content, createdAt: new Date(), userId: user?.id },
+    });
 
     return Response.json({
       success: true,

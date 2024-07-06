@@ -1,13 +1,13 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-import dbConnect from '@/lib/dbConnect';
-import UserModel from '@/model/User';
+import { PrismaClient } from '@prisma/client';
 import { User, getServerSession } from 'next-auth';
 
+const prisma = new PrismaClient();
+
 export async function DELETE(
-  request: Request,
+  _: Request,
   { params }: { params: { messageId: string } }
 ) {
-  await dbConnect();
   const messageId = params.messageId;
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
@@ -20,12 +20,11 @@ export async function DELETE(
   }
 
   try {
-    const updateResult = await UserModel.updateOne(
-      { _id: user._id },
-      { $pull: { messages: { _id: messageId } } }
-    );
+    const updateResult = await prisma.message.delete({
+      where: { id: messageId, userId: user?.id },
+    });
 
-    if (updateResult.modifiedCount === 0) {
+    if (!updateResult) {
       return Response.json({
         success: false,
         message: 'Message not found or already deleted',
