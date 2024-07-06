@@ -28,9 +28,9 @@ export default function MessageCard({
 }: MessageCardProps) {
   const { toast } = useToast();
   const handleDeleteConfirm = async () => {
-    const response = await axios.delete(`/api/delete-message/${message._id}`);
+    const response = await axios.delete(`/api/delete-message/${message.id}`);
     toast({ title: response?.data.message });
-    onMessageDelete(message._id as string);
+    onMessageDelete(message.id as string);
   };
   return (
     <Card className="w-full max-w-md">

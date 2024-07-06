@@ -1,11 +1,10 @@
-import dbConnect from '@/lib/dbConnect';
-import UserModel from '@/model/User';
-import mongoose from 'mongoose';
+import { PrismaClient } from '@prisma/client';
 import { User, getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/options';
 
+const prisma = new PrismaClient();
+
 export async function GET(request: Request) {
-  await dbConnect();
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
 
@@ -16,17 +15,23 @@ export async function GET(request: Request) {
     });
   }
 
-  const userId = new mongoose.Types.ObjectId(user._id);
+  const userId = user.id;
 
   try {
-    const user = await UserModel.aggregate([
-      { $match: { _id: userId } },
-      { $unwind: '$messages' },
-      { $sort: { 'messages.createdAt': -1 } },
-      { $group: { _id: '$_id', messages: { $push: '$messages' } } },
-    ]);
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
+    });
 
-    if (!user || user.length === 0) {
+    if (!user) {
       return Response.json({
         sucess: false,
         message: 'User not found',
@@ -35,7 +40,7 @@ export async function GET(request: Request) {
 
     return Response.json({
       sucess: true,
-      messages: user[0]?.messages,
+      messages: user?.messages,
     });
   } catch (error) {
     return Response.json({
