@@ -13,11 +13,14 @@ import { messageSchema } from '@/schemas/messageSchema';
 import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function Page() {
+  const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
     defaultValues: {
@@ -28,12 +31,17 @@ export default function Page() {
   const params = useParams<{ username: string }>();
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
+    setIsSendingMessage(true);
     try {
       const response = await axios.post<ApiResponse>('/api/send-messages', {
         content: data.content,
         username: params.username,
       });
-      toast({ title: response.data.message });
+
+      response.data.success
+        ? toast({ title: response.data.message })
+        : toast({ title: response.data.message, variant: 'destructive' });
+
       form.reset();
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -43,6 +51,8 @@ export default function Page() {
           axiosError.response?.data.message || 'Failed to send messages',
         variant: 'destructive',
       });
+    } finally {
+      setIsSendingMessage(false);
     }
   };
 
@@ -50,7 +60,8 @@ export default function Page() {
     <main className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 rounded w-full max-w-6xl grid place-items-center">
       <section className="text-center mb-8 md:mb-12">
         <p className="mt-3 md:mt-4 text-base md:text-lg">
-          Send message anonymously - Where you identity remains secret
+          Send message anonymously to <strong>{params.username}</strong> - Where
+          you identity remains secret
         </p>
       </section>
       <Form {...form}>
@@ -73,7 +84,16 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit">Send message</Button>
+          <Button type="submit" disabled={isSendingMessage}>
+            {isSendingMessage ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending message
+              </>
+            ) : (
+              'Send message'
+            )}
+          </Button>
         </form>
       </Form>
     </main>

@@ -18,12 +18,14 @@ import { useForm } from 'react-hook-form';
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSwitchLoading, setIsSwitchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSwitchLoading, setIsSwitchLoading] = useState<boolean>(false);
   const { toast } = useToast();
 
   const handleDeleteMessage = (messageId: string) => {
-    setMessages(messages.filter((message) => message._id !== messageId));
+    setMessages(
+      messages.filter((message: Message) => message.id !== messageId)
+    );
   };
 
   const { data: session } = useSession();
@@ -50,6 +52,7 @@ export default function Page() {
     } finally {
       setIsSwitchLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue]);
 
   const fetchMessages = useCallback(
@@ -79,6 +82,7 @@ export default function Page() {
         setIsSwitchLoading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setIsLoading, setMessages]
   );
 
