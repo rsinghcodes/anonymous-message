@@ -12,16 +12,21 @@ import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
 import { useToast } from '@/components/ui/use-toast';
 import { signInSchema } from '@/schemas/signInSchema';
+import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function Page() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -31,30 +36,43 @@ export default function Page() {
   });
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-    const result = await signIn('credentials', {
-      redirect: false,
-      identifier: data.identifier,
-      password: data.password,
-    });
+    setIsLoggingIn(true);
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        identifier: data.identifier,
+        password: data.password,
+      });
 
-    if (result?.error) {
-      if (result?.error === 'CredentialsSignIn') {
-        toast({
-          title: 'Login failed',
-          description: 'Incorrect username or password',
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title: 'Login failed',
-          description: result?.error,
-          variant: 'destructive',
-        });
+      if (result?.error) {
+        if (result?.error === 'CredentialsSignIn') {
+          toast({
+            title: 'Login failed',
+            description: 'Incorrect username or password',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Login failed',
+            description: result?.error,
+            variant: 'destructive',
+          });
+        }
       }
-    }
 
-    if (result?.url) {
-      router.replace('/dashboard');
+      if (result?.url) {
+        router.replace('/dashboard');
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+
+      toast({
+        title: 'Login failed',
+        description: axiosError.response?.data.message ?? 'Error signing in',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -95,7 +113,16 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Sign in</Button>
+            <Button type="submit" className="w-full" disabled={isLoggingIn}>
+              {isLoggingIn ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in
+                </>
+              ) : (
+                'Sign in'
+              )}
+            </Button>
           </form>
         </Form>
         <div className="text-center mt-4">

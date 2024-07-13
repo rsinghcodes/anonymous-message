@@ -13,7 +13,9 @@ import { messageSchema } from '@/schemas/messageSchema';
 import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -25,9 +27,11 @@ export default function Page() {
     },
   });
   const { toast } = useToast();
+  const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const params = useParams<{ username: string }>();
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
+    setIsSendingMessage(true);
     try {
       const response = await axios.post<ApiResponse>('/api/send-messages', {
         content: data.content,
@@ -43,6 +47,8 @@ export default function Page() {
           axiosError.response?.data.message || 'Failed to send messages',
         variant: 'destructive',
       });
+    } finally {
+      setIsSendingMessage(false);
     }
   };
 
@@ -73,7 +79,16 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit">Send message</Button>
+          <Button type="submit" disabled={isSendingMessage}>
+            {isSendingMessage ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending message
+              </>
+            ) : (
+              'Send message'
+            )}
+          </Button>
         </form>
       </Form>
     </main>
