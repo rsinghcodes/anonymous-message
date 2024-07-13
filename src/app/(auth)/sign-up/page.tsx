@@ -68,8 +68,16 @@ export default function Page() {
     setIsSubmitting(true);
     try {
       const response = await axios.post('/api/sign-up', data);
-      toast({ title: 'Success', description: response.data.message });
-      router.replace(`/verify/${username}`);
+      if (response.data.success) {
+        toast({ title: 'Success', description: response.data.message });
+        router.replace(`/verify/${username}`);
+      } else {
+        toast({
+          title: 'Failed',
+          description: response.data.message,
+          variant: 'destructive',
+        });
+      }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({

@@ -17,19 +17,23 @@ import { verifySchema } from '@/schemas/verifySchema';
 import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function Page() {
   const { toast } = useToast();
   const params = useParams<{ username: string }>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>();
   const form = useForm<z.infer<typeof verifySchema>>({
     resolver: zodResolver(verifySchema),
   });
   const router = useRouter();
 
   const onSubmit = async (data: z.infer<typeof verifySchema>) => {
+    setIsSubmitting(true);
     try {
       const response = await axios.post(`/api/verify-code`, {
         username: params.username,
@@ -53,6 +57,8 @@ export default function Page() {
         description: axiosError.response?.data.message,
         variant: 'destructive',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -94,7 +100,16 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Verifying code
+                </>
+              ) : (
+                'Verify code'
+              )}
+            </Button>
           </form>
         </Form>
       </div>
