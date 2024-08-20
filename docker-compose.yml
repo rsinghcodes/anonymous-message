@@ -1,7 +1,6 @@
 services:
   postgres:
     image: postgres:12.19-alpine3.20
-    hostname: postgres
     ports:
       - '5432:5432'
     environment:
@@ -12,7 +11,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-U", "postgres","-d", "ANONYMOUS_MESSAGE"]
       interval: 5s
       timeout: 10s
       retries: 5
@@ -43,9 +42,7 @@ services:
         condition: service_healthy
     ports:
       - '3000:3000'
-    restart: always
-    volumes:
-      - .:/app/next-app
+    restart: unless-stopped
 
 volumes:
   postgres-data:

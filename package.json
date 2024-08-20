@@ -7,8 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:migrate": "npx prisma migrate dev --schema=./prisma/schema.prisma",
-    "prisma:generate": "npx prisma generate --schema=./prisma/schema.prisma"
+    "deploy": "npx prisma migrate deploy",
+    "migrate": "npx prisma migrate dev --schema=./prisma/schema.prisma",
+    "generate": "npx prisma generate"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
